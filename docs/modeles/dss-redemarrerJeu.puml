@@ -1,1 +1,6 @@
-// Vous devez compléter ce fichier
+@startuml
+actor Joueur as J
+boundary ":Système" as S
+
+J -> S : redémarrerJeu()
+@enduml

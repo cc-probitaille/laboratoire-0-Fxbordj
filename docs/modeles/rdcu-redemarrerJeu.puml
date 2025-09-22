@@ -1,1 +1,7 @@
-// Vous devez complétéer ce fichier
+@startuml
+control ":JeuDeDes" as JD
+collections "joueurs: Map<String, Joueur>" as joueurs
+
+JD -> JD : redemarrerJeu()
+JD -> joueurs : clear()
+@enduml
