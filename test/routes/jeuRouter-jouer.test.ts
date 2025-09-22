@@ -17,13 +17,31 @@ describe('GET /api/v1/jeu/jouer/:id', () => {
         it(`devrait répondre avec un appel réussi pour le joueur existant ${testNom1} et les valeurs appropriées`, async () => {
             const response = await request.get('/api/v1/jeu/jouer/' + testNom1);
             const resultat = JSON.parse(response.body.resultat);
+
             expect(response.status).toBe(200);
             expect(response.type).toBe("application/json");
+
+            // Vérifie l’incrément du nombre de lancers
             expect(resultat.lancers).toBe(i + 1);
+
+            // Vérifie que chaque dé est valide
             expect(resultat.v1).toBeWithin(1, 7);
             expect(resultat.v2).toBeWithin(1, 7);
-            expect(resultat.somme).toBe(resultat.v1 + resultat.v2);
+            expect(resultat.v3).toBeWithin(1, 7);
+
+            // Vérifie la somme
+            expect(resultat.somme).toBe(resultat.v1 + resultat.v2 + resultat.v3);
+            expect(resultat.somme).toBeWithin(3, 19);
+
+            // Vérifie que le nom est correct
             expect(resultat.nom).toBe(testNom1);
+
+            // Vérifie que la règle de victoire est cohérente
+            if (resultat.somme <= 10) {
+                expect(resultat.message).toInclude("gagné");
+            } else {
+                expect(resultat.message).toInclude("perdu");
+            }
         });
     }
 
