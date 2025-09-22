@@ -82,4 +82,11 @@ export class JeuDeDes {
         return JSON.stringify(Array.from(this._joueurs.values()));
     }
 
+    /**
+     * Redémarre le jeu en supprimant tous les joueurs.
+     */
+    public redemarrerJeu(): void {
+        this._joueurs.clear();
+    }
+
 }
