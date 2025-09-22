@@ -1,32 +1,43 @@
 @startuml
 skinparam style strictuml
-skinparam defaultfontname Verdana
-title RDCU pour jouer
+skinparam defaultFontName Verdana
+
+title RDCU pour jouer (avec 3 dés et règle somme ≤ 10)
 participant ":JeuDeDes" as c
 participant "joueurs:\nMap<String,Joueur>" as jm
 participant "d1:De" as d1
 participant "d2:De" as d2
+participant "d3:De" as d3
 participant "j:Joueur" as j
-->c : jouer(nom)
+
+c -> c : jouer(nom)
 note right : selon Contrôleur
-c->jm : j = chercher(nom)
+c -> jm : j = chercher(nom)
 note right : selon Transformer ID en objets
-c->d1 : brasser()
+
+c -> d1 : brasser()
+c <- d1 : v1 = valeur
 note right : selon Expert
-c->d1 : v1 = valeur
+
+c -> d2 : brasser()
+c <- d2 : v2 = valeur
 note right : selon Expert
-c->d2 : brasser()
+
+c -> d3 : brasser()
+c <- d3 : v3 = valeur
 note right : selon Expert
-c->d2 : v2 = valeur
+
+c -> j : incNbParties()
 note right : selon Expert
-c->j : incNbParties()
-note right : selon Expert
-opt v1 + v2 == 7
-  c->j : incNbPartiesGagnees()
+
+opt (v1 + v2 + v3 <= 10)
+  c -> j : incNbPartiesGagnees()
   note right : selon Expert
 end opt
-c->j : p = nbParties
+
+c -> j : p = nbParties
 note right : selon Expert
-c->j : g = nbPartiesGagnees
+c -> j : g = nbPartiesGagnees
 note right : selon Expert
+
 @enduml
