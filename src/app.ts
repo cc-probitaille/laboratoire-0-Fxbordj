@@ -4,6 +4,7 @@ import logger from 'morgan';
 import flash from 'express-flash-plus';
 
 import { jeuRoutes } from './routes/jeuRouter';
+import { Joueur } from './core/joueur';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -51,7 +52,6 @@ class App {
     // Route pour jouer (index)
     router.get('/', (req, res, next) => {
       res.render('index',
-        // passer objet au gabarit (template) Pug
         {
           title: `${titreBase}`,
           user: user,
@@ -61,13 +61,22 @@ class App {
 
     // Route pour classement (stats)
     router.get('/stats', (req, res, next) => {
+      const joueurs: Array<Joueur> = JSON.parse(jeuRoutes.controleurJeu.joueurs);
+
+      // Ajouter ratio = lancersGagnes / lancers (ou 0 si aucun lancer)
+      const joueursAvecRatio = joueurs.map(joueur => {
+        const ratio = joueur.lancers > 0 ? joueur.lancersGagnes / joueur.lancers : 0;
+        return { ...joueur, ratio };
+      });
+
+      // Trier en ordre décroissant (meilleurs ratios en premier)
+      joueursAvecRatio.sort((a, b) => b.ratio - a.ratio);
+
       res.render('stats',
-        // passer objet au gabarit (template) Pug
         {
           title: `${titreBase}`,
           user: user,
-          // créer nouveau tableau de joueurs qui est trié par ratio
-          joueurs: JSON.parse(jeuRoutes.controleurJeu.joueurs)
+          joueurs: joueursAvecRatio
         });
     });
 
@@ -83,16 +92,14 @@ class App {
       }
     });
 
-    // Route to login
+    // Route to logout
     router.get('/signout', async function (req, res) {
       // simuler une déconnexion
       user = { isAnonymous: true };
       return res.redirect('/');
     });
 
-
     this.expressApp.use('/', router);  // routage de base
-
     this.expressApp.use('/api/v1/jeu', jeuRoutes.router);  // tous les URI pour le scénario jeu (DSS) commencent ainsi
   }
 
