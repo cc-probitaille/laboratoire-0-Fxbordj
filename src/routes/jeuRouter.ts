@@ -39,7 +39,7 @@ export class JeuRouter {
       req.flash('info', `Nouveau jeu pour ${nom}`);
       res.status(201).send({
         message: 'Success',
-        status: res.status,
+        status: 201,
         joueur: joueurObj
       });
     } catch (error) {
@@ -61,7 +61,7 @@ export class JeuRouter {
         `Résultat pour ${nom}: ${resultatObj.v1} + ${resultatObj.v2} + ${resultatObj.v3} = ${resultatObj.somme}`);
       res.status(200).send({
         message: 'Success',
-        status: res.status,
+        status: 200,
         resultat
       });
     } catch (error) {
@@ -80,7 +80,7 @@ export class JeuRouter {
       req.flash('info', `Jeu terminé pour ${nom}`);
       res.status(200).send({
         message: 'Success',
-        status: res.status,
+        status: 200,
         resultat
       });
     } catch (error) {
@@ -97,7 +97,7 @@ export class JeuRouter {
       req.flash('info', `Jeu redémarré`);
       res.status(200).send({
         message: 'Success',
-        status: res.status
+        status: 200
       });
     } catch (error) {
       this._errorCode500(error, req, res);

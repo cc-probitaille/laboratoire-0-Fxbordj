@@ -15,29 +15,29 @@ note right : selon Contrôleur
 c -> jm : j = chercher(nom)
 note right : selon Transformer ID en objets
 
-c -> d1 : brasser()
-c <- d1 : v1 = valeur
+c->d1 : brasser()
+c->d1 : v1 = valeur
 note right : selon Expert
 
-c -> d2 : brasser()
-c <- d2 : v2 = valeur
+c->d2 : brasser()
+c->d2 : v2 = valeur
 note right : selon Expert
 
-c -> d3 : brasser()
-c <- d3 : v3 = valeur
+c->d3 : brasser()
+c->d3 : v3 = valeur
 note right : selon Expert
 
 c -> j : incNbParties()
 note right : selon Expert
 
-opt (v1 + v2 + v3 <= 10)
+opt v1 + v2 + v3 <= 10
   c -> j : incNbPartiesGagnees()
   note right : selon Expert
 end opt
 
 c -> j : p = nbParties
 note right : selon Expert
-c -> j : g = nbPartiesGagnees
+c -> j : g = nbPartiesGagnées
 note right : selon Expert
 
 @enduml

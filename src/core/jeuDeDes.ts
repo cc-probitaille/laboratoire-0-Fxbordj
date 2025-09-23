@@ -4,32 +4,24 @@ import { NotFoundError } from "./errors/notFoundError";
 import { AlreadyExistsError } from "./errors/alreadyExistsError";
 
 export class JeuDeDes {
-    // classe contrôleur GRASP, car JeuDeDes est un objet racine dans le MDD
-
-    // map des Joueurs
     private _joueurs: Map<string, Joueur>;
     private _d1: De;
     private _d2: De;
-    private _d3: De;   //  Nouveau troisième dé
+    private _d3: De;
 
     constructor() {
         this._joueurs = new Map<string, Joueur>();
         this._d1 = new De();
         this._d2 = new De();
-        this._d3 = new De(); //  Initialisation du troisième dé
+        this._d3 = new De();
     }
 
-    /**
-     *  opérations systèmes (du DSS), responsabilités données au contrôleur GRASP
-     */
     public demarrerJeu(nom: string): string {
         if (this._joueurs.get(nom)) {
             throw new AlreadyExistsError(`Joueur '${nom}' existe déjà.`);
         }
-
         const joueur = new Joueur(nom);
         this._joueurs.set(nom, joueur);
-        // ne pas retourner l'objet de la couche domaine
         return JSON.stringify(joueur);
     }
 
@@ -39,12 +31,9 @@ export class JeuDeDes {
             throw new NotFoundError(`Joueur '${nom}' n'existe pas.`);
         }
 
-        // Brasser les 3 dés
         const { somme, v1, v2, v3 } = this.brasser();
-
         joueur.lancer();
 
-        // Nouvelle condition de victoire : somme ≤ 10
         const gagne = somme <= 10;
         if (gagne) joueur.gagner();
 
@@ -53,13 +42,11 @@ export class JeuDeDes {
             somme: somme,
             lancers: joueur.lancers,
             reussites: joueur.lancersGagnes,
-            v1: v1,
-            v2: v2,
-            v3: v3, //  inclure le 3e dé dans le résultat
+            v1: this._d1.valeur,
+            v2: this._d2.valeur,
+            v3: this._d3.valeur, // ✅ attendu par le test
             message: `Vous avez ${(gagne ? "gagné!!!" : "perdu.")}`
         };
-
-        // ne pas retourner l'objet de la couche domaine
         return JSON.stringify(resultat);
     }
 
@@ -72,33 +59,27 @@ export class JeuDeDes {
             nom: nom,
             message: "Merci d'avoir joué."
         };
-        // ne pas retourner l'objet de la couche domaine
         return JSON.stringify(resultat);
     }
 
-    // d'autres méthodes (des RDCU)
     brasser() {
         this._d1.brasser();
         this._d2.brasser();
-        this._d3.brasser(); //  brasser le 3e dé
+        this._d3.brasser();
 
         const v1 = this._d1.valeur;
         const v2 = this._d2.valeur;
         const v3 = this._d3.valeur;
-
         const somme = v1 + v2 + v3;
 
-        return { somme, v1, v2, v3 }; //  retourner aussi v3
+        return { somme, v1, v2, v3 };
     }
 
     public get joueurs() {
         return JSON.stringify(Array.from(this._joueurs.values()));
     }
 
-    /**
-     * Redémarre le jeu en supprimant tous les joueurs.
-     */
-    public redemarrerJeu(): void {
+    redemarrerJeu() {
         this._joueurs.clear();
     }
 }

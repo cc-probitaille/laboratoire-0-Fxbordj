@@ -14,13 +14,13 @@ class De {
   valeur : int
 }
 
-class JeuDeDes {
+class JeuDeDés {
   d1 : De
   d2 : De
   d3 : De
 }
 
 // associations
-Joueur "1" -down- "1" JeuDeDes : joue
-JeuDeDes "1" -up- "3" De : inclut
+Joueur "1" -down- "1" JeuDeDés : joue
+JeuDeDés "1" -up- "3" Dé : inclut >
 @enduml
